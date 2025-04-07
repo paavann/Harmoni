@@ -1,0 +1,2 @@
+# Harmoni
+AI Journaling App
