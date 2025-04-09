@@ -16,6 +16,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+from datetime import timedelta
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -25,7 +27,21 @@ SECRET_KEY = 'django-insecure-&)0$62kt+9&pumo1cq6%34jt+-&%t3cax(wb)ldjm2t0txsc1^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
+}
 
 
 # Application definition
@@ -37,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
     'users'
 ]
 
@@ -48,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'Harmoni.urls'
@@ -133,3 +152,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #custom user model
 AUTH_USER_MODEL = 'users.User'
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWS_CREDENTIALS = True

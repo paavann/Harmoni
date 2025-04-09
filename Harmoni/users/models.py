@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
-            raise ValueError("EMail is required")
+            raise ValueError("E-Mail is required")
         
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
