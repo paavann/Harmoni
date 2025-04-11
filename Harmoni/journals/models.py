@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 import os
 
 
@@ -20,7 +21,7 @@ class Journal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def can_edit(self):
+    def is_editable(self):
         return self.created_at.date() == timezone.now().date()
 
     def __str__(self):
