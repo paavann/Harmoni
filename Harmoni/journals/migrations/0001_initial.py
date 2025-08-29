@@ -24,7 +24,6 @@ class Migration(migrations.Migration):
                 ('content', models.TextField()),
                 ('ai_response', models.TextField(blank=True, null=True)),
                 ('sentiment', models.CharField(blank=True, max_length=20, null=True)),
-                ('attachment', models.FileField(blank=True, null=True, upload_to=journals.models.journal_attachment_path)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='journals', to=settings.AUTH_USER_MODEL)),

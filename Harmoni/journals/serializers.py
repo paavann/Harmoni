@@ -11,13 +11,13 @@ class JournalSerializer(serializers.ModelSerializer):
             'id', 
             'user',
             'title',
-            'category',
+            # 'category',
             'content',
             'ai_response',
             'sentiment',
             'created_at',
             'updated_at',
-            'attachment',
+            # 'attachment',
             'is_editable',
         ]
         read_only_fields = [ 'user', 'ai_response', 'sentiment', 'created_at', 'updated_at', 'is_editable' ]
