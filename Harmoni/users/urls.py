@@ -1,9 +1,8 @@
 from django.urls import path
-from .views import CreateUserView, AuthCookieView, RefreshCookieView
-from rest_framework_simplejwt.views import TokenRefreshView
+from .views import CreateUserView, AuthCookieView, SessionView
 
 urlpatterns = [
     path('register/', CreateUserView.as_view(), name="register"),
     path('auth/login/', AuthCookieView.as_view(), name="get_token"),
-    path('auth/refresh/', RefreshCookieView.as_view(), name="refresh"),
+    path('auth/session/', SessionView.as_view(), name="refresh"),
 ]
