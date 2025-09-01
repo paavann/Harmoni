@@ -95,6 +95,35 @@ class AuthCookieView(APIView):
         return response
 
 
+class LogoutView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        response = Response(
+            { "message": "logout successful" },
+            status=status.HTTP_200_OK
+        )
+
+        response.set_cookie(
+            key="access_token",
+            value="",
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+            max_age=0,
+        )
+        response.set_cookie(
+            key="refresh_token",
+            value="",
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+            max_age=0,
+        )
+
+        return response
+
+
 class RefreshCookieView(APIView):
     permission_classes = [AllowAny] #access_token is invalid.
 
