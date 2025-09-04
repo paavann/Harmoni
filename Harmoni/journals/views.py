@@ -1,7 +1,10 @@
 from rest_framework import generics, permissions
-from .models import Journal
-from .serializers import JournalSerializer
+from .models import Journal, JournalEntry
+from .serializers import JournalSerializer, JournalEntrySerializer
 from .ai_utils import generate_analysis, sentiment_analysis
+
+
+
 
 
 #check whether the user owns the Journal
@@ -18,14 +21,7 @@ class JournalListCreateView(generics.ListCreateAPIView):
         return Journal.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        user = self.request.user
-        journal_text = serializer.validated_data.get("content")
-        mbti_type = user.mbti_type
-
-        sentiment = sentiment_analysis(journal_text)
-        ai_response = generate_analysis(journal_text, sentiment, mbti_type)
-
-        serializer.save(user=user, ai_response=ai_response, sentiment=sentiment)
+        serializer.save(user=self.request.user)
 
 #GET/DELETE Journal
 class JournalDetailView(generics.RetrieveDestroyAPIView):

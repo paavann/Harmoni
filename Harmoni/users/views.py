@@ -16,7 +16,9 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
         refresh = RefreshToken.for_user(user)
@@ -24,7 +26,7 @@ class CreateUserView(generics.CreateAPIView):
         refresh_token = str(refresh)
 
         response = Response({
-            "message": "Login Successful",
+            "message": "Account created successfully.",
             "user": {
                 "id": user.id,
                 "email": user.email,
@@ -48,7 +50,7 @@ class CreateUserView(generics.CreateAPIView):
             samesite="Lax",
             max_age=60*60*24*7
         )
-        return response
+        return response        
 
 
 class AuthCookieView(APIView):
@@ -81,7 +83,7 @@ class AuthCookieView(APIView):
             httponly=True,
             secure=False,
             samesite="Lax",
-            max_age=60*15
+            max_age=60*40
         )
         response.set_cookie(
             key="refresh_token",
@@ -192,4 +194,3 @@ class SessionView(APIView):
                 return response
             except Exception:
                 return Response({ "message": "invalid refresh token" }, status=status.HTTP_401_UNAUTHORIZED)
-            
