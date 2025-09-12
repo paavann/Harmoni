@@ -160,3 +160,8 @@ CORS_ALLOWED_ORIGINS = [
     os.getenv('CLIENT_URL'),
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+
+#setting up path for media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

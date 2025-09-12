@@ -12,6 +12,11 @@ class Journal(models.Model):
     )
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
+    cover_image = models.ImageField(
+        upload_to='journal_covers/',
+        blank=True,
+        null=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
