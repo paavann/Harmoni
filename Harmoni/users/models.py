@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
 
 
 
@@ -34,3 +35,35 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+
+class ActivityLog(models.Model):
+    ACTION_CHOICES = [
+        ("ACCOUNT_CREATED", "Account created"),
+        ("LOGIN", "Login"),
+        ("LOGOUT", "Logout"),
+        ("UPDATE_PROFILE", "profile updated"),
+        ("CHANGE_PASSWORD", "password changed"),
+        ("UPLOAD_PHOTO", "profile picture uploaded"),
+        ("DELETE_ACCOUNT", "account deleted")
+    ]
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="activities"
+    )
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(null=True, blank=True)
+    metadata = models.JSONField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "action", "created_at"]),
+        ]
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.user.email} - {self.action} at {self.created_at}"

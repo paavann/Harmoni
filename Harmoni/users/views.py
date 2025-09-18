@@ -1,13 +1,15 @@
-from .models import User
-from .serializers import UserSerializer
+from .models import User, ActivityLog
+from .serializers import UserSerializer, ActivityLogSerializer
+from .utils import get_client_ip
 
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework import status
+
 
 
 
@@ -63,6 +65,14 @@ class AuthCookieView(APIView):
         user = authenticate(request, email=email, password=password)
         if user is None:
             return Response({ "detail": "Invalid credentials" })
+        
+        ActivityLog.objects.create(
+            user=user,
+            action="LOGIN",
+            ip_address=get_client_ip(request),
+            user_agent=request.META.get("HTTP_USER_AGENT", ""),
+            metadata={},
+        )
 
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
@@ -194,3 +204,12 @@ class SessionView(APIView):
                 return response
             except Exception:
                 return Response({ "message": "invalid refresh token" }, status=status.HTTP_401_UNAUTHORIZED)
+            
+
+class UserActivityView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        logs = request.user.activities.all()[:50]
+        serializer = ActivityLogSerializer(logs, many=True)
+        return Response(serializer.data)
