@@ -16,6 +16,11 @@ class UserSerializer(serializers.ModelSerializer):
     
 
 class ActivityLogSerializer(serializers.ModelSerializer):
+    action_display = serializers.SerializerMethodField()
+    
     class Meta:
         model = ActivityLog
-        fields = ['id', 'action', 'ip_address', 'user_agent', 'metadata', 'created_at']
+        fields = ['id', 'action', 'action_display', 'ip_address', 'user_agent', 'metadata', 'created_at']
+
+    def get_action_display(self, obj):
+        return obj.get_action_display()

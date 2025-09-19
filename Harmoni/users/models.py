@@ -39,9 +39,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class ActivityLog(models.Model):
     ACTION_CHOICES = [
-        ("ACCOUNT_CREATED", "Account created"),
-        ("LOGIN", "Login"),
-        ("LOGOUT", "Logout"),
+        ("ACCOUNT_CREATED", "you just created your harmoni account!"),
+        ("LOGIN", "you logged in"),
         ("UPDATE_PROFILE", "profile updated"),
         ("CHANGE_PASSWORD", "password changed"),
         ("UPLOAD_PHOTO", "profile picture uploaded"),

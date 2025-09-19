@@ -27,6 +27,14 @@ class CreateUserView(generics.CreateAPIView):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
+        ActivityLog.objects.create(
+            user=user,
+            action="ACCOUNT_CREATED",
+            ip_address=get_client_ip(request),
+            user_agent=request.META.get("HTTP_USER_AGENT", ""),
+            metadata={},
+        )
+
         response = Response({
             "message": "Account created successfully.",
             "user": {
